@@ -131,8 +131,11 @@ return {loading, svg, myCitiesList, showGearCard}
 }
 
 /* Стили карточки с погодой */
+
 .mww-weatherCard-container{
-  width: 100%;
+  padding: 15px;
+  background: #e9e9e9;
+  width: 20%;
 }
 .mww-weatherCard-header{
   display: flex;
@@ -143,7 +146,7 @@ return {loading, svg, myCitiesList, showGearCard}
   font-weight: bold;
   align-items: center;
 }
-.mww-weatherCard-icon{
+.mww-weatherCard-icon {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -169,7 +172,7 @@ return {loading, svg, myCitiesList, showGearCard}
 
 /* Стили карточки с настройками */
 .mww-gearCard-container{
-  width: 100%;
+  width: 20%;
 }
 .mww-gearCard-header{
   display: flex;

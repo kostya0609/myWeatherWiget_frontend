@@ -1,72 +1,70 @@
 <template>
-<el-card v-if="!loading" class="mww-weatherCard-container">
+<div v-if="!loading" class="mww-weatherCard-container">
+  <div class="mww-weatherCard-header">
+    <label class="mww-weatherCard-header-label">
+      <el-icon :size="20"><LocationFilled /></el-icon>
+        {{weatherInfo.cityName}}
+    </label>
+    <el-button
+      text
+      @click="context.emit('gearButton')"
+    >
+      <el-icon :size="24"><Tools /></el-icon>
+    </el-button>
+  </div>
 
-    <div class="mww-weatherCard-header">
-        
-        <label class="mww-weatherCard-header-label">
-            <el-icon :size="20"><LocationFilled /></el-icon>
-            {{weatherInfo.cityName}}
-        </label>
-        <el-button 
-            text
-            @click="context.emit('gearButton')"
-        >
-            <el-icon :size="24"><Tools /></el-icon>
-        </el-button>
-    </div>
+  <div  class="mww-weatherCard-icon">
+    <el-image :src="weatherInfo.icon"/>
+    <label class="mww-weatherCard-label-degree">
+      {{weatherInfo.temp}}<sup>o</sup> C
+    </label>
+  </div>
 
-    <div  class="mww-weatherCard-icon">
-        <el-image  :src="weatherInfo.icon"/>
-        <label class="mww-weatherCard-label-degree">
-            {{weatherInfo.temp}}<sup>o</sup> C
-        </label>
-    </div>
+  <div>
+    <label class="mww-weatherCard-description-label">
+      Ощущается как - {{weatherInfo.feels_like}}<sup>o</sup> C, {{weatherInfo.description}}.
+    </label>
+  </div>
 
-    <div>
-        <label class="mww-weatherCard-description-label">
-            Ощущается как - {{weatherInfo.feels_like}}<sup>o</sup> C, {{weatherInfo.description}}.
-        </label>   
-    </div>
+  <div class="mww-weatherCard-addInfo">
+    <label class="mww-weatherCard-addInfo-label">
+      <el-icon :size="20" v-if="windDirection == 'N'"><Bottom/></el-icon>
+      <el-icon :size="20" v-if="windDirection == 'NNE' || windDirection == 'NE' || windDirection == 'ENE'"><BottomLeft/></el-icon>
 
-    <div class="mww-weatherCard-addInfo">
-        <label class="mww-weatherCard-addInfo-label">
-            <el-icon :size="20" v-if="windDirection == 'N'"><Bottom/></el-icon>
-            <el-icon :size="20" v-if="windDirection == 'NNE' || windDirection == 'NE' || windDirection == 'ENE'"><BottomLeft/></el-icon>
+      <el-icon :size="20" v-if="windDirection == 'E'"><Back/></el-icon>
+      <el-icon :size="20" v-if="windDirection == 'ESE' || windDirection == 'SE' || windDirection == 'SSE'"><TopLeft/></el-icon>
 
-            <el-icon :size="20" v-if="windDirection == 'E'"><Back/></el-icon>
-            <el-icon :size="20" v-if="windDirection == 'ESE' || windDirection == 'SE' || windDirection == 'SSE'"><TopLeft/></el-icon>
-
-            <el-icon :size="20" v-if="windDirection == 'S'"><Top/></el-icon>
-            <el-icon :size="20" v-if="windDirection == 'SSW' || windDirection == 'SW' || windDirection == 'WSW'"><TopRight/></el-icon>
+      <el-icon :size="20" v-if="windDirection == 'S'"><Top/></el-icon>
+      <el-icon :size="20" v-if="windDirection == 'SSW' || windDirection == 'SW' || windDirection == 'WSW'"><TopRight/></el-icon>
             
-            <el-icon :size="20" v-if="windDirection == 'W'"><Right/></el-icon>
-            <el-icon :size="20" v-if="windDirection == 'WNW' || windDirection == 'NW' || windDirection == 'NNW'"><BottomRight/></el-icon>
+      <el-icon :size="20" v-if="windDirection == 'W'"><Right/></el-icon>
+      <el-icon :size="20" v-if="windDirection == 'WNW' || windDirection == 'NW' || windDirection == 'NNW'"><BottomRight/></el-icon>
 
-            &nbsp;{{weatherInfo.wind_speed}}м/с {{weatherInfo.wind_speed ? ', ' : '' }} {{windDirection}}
-        </label>
+     &nbsp;{{weatherInfo.wind_speed}}м/с {{weatherInfo.wind_speed ? ', ' : '' }} {{windDirection}}
+    </label>
 
-        <label class="mww-weatherCard-addInfo-label">
-           <el-icon :size="20"><Stopwatch /></el-icon>&nbsp;{{weatherInfo.pressure}}hPA
-        </label>
-    </div>
+    <label class="mww-weatherCard-addInfo-label">
+      <el-icon :size="20"><Stopwatch /></el-icon>&nbsp;{{weatherInfo.pressure}}hPA
+    </label>
+  </div>
 
-    <div class="mww-weatherCard-addInfo">
-        <label class="mww-weatherCard-addInfo-label">
-            Влажность: {{weatherInfo.humidity}} %
-        </label>
+  <div class="mww-weatherCard-addInfo">
+    <label class="mww-weatherCard-addInfo-label">
+      Влажность: {{weatherInfo.humidity}} %
+    </label>
 
-        <label class="mww-weatherCard-addInfo-label">
-           Точка росы: н/д
-        </label>
-    </div>
+    <label class="mww-weatherCard-addInfo-label">
+      Точка росы: н/д
+    </label>
+  </div>
 
-    <div class="mww-weatherCard-addInfo">
-        <label class="mww-weatherCard-addInfo-label">
-            Видимость: {{weatherInfo.visibility}}км
-        </label>
-    </div>
-    
-</el-card>
+  <div class="mww-weatherCard-addInfo">
+    <label class="mww-weatherCard-addInfo-label">
+      Видимость: {{weatherInfo.visibility}}км
+    </label>
+  </div>
+</div>
+
 </template>
 <script>
 import {reactive, inject, computed} from 'vue'
