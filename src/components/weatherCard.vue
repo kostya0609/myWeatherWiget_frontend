@@ -22,23 +22,39 @@
 
   <div>
     <label class="mww-weatherCard-description-label">
-      Ощущается как - {{weatherInfo.feels_like}}<sup>o</sup> C, {{weatherInfo.description}}.
+      Ощущается как: {{weatherInfo.feels_like}}<sup>o</sup> C, {{weatherInfo.description}}.
     </label>
   </div>
 
   <div class="mww-weatherCard-addInfo">
     <label class="mww-weatherCard-addInfo-label">
-      <el-icon :size="20" v-if="windDirection == 'N'"><Bottom/></el-icon>
-      <el-icon :size="20" v-if="windDirection == 'NNE' || windDirection == 'NE' || windDirection == 'ENE'"><BottomLeft/></el-icon>
+      <el-icon :size="20" v-if="windDirection == 'N'">
+        <Bottom/>
+      </el-icon>
+      <el-icon :size="20" v-if="windDirection == 'NNE' || windDirection == 'NE' || windDirection == 'ENE'">
+        <BottomLeft/>
+      </el-icon>
 
-      <el-icon :size="20" v-if="windDirection == 'E'"><Back/></el-icon>
-      <el-icon :size="20" v-if="windDirection == 'ESE' || windDirection == 'SE' || windDirection == 'SSE'"><TopLeft/></el-icon>
+      <el-icon :size="20" v-if="windDirection == 'E'">
+        <Back/>
+      </el-icon>
+      <el-icon :size="20" v-if="windDirection == 'ESE' || windDirection == 'SE' || windDirection == 'SSE'">
+        <TopLeft/>
+      </el-icon>
 
-      <el-icon :size="20" v-if="windDirection == 'S'"><Top/></el-icon>
-      <el-icon :size="20" v-if="windDirection == 'SSW' || windDirection == 'SW' || windDirection == 'WSW'"><TopRight/></el-icon>
+      <el-icon :size="20" v-if="windDirection == 'S'">
+        <Top/>
+      </el-icon>
+      <el-icon :size="20" v-if="windDirection == 'SSW' || windDirection == 'SW' || windDirection == 'WSW'">
+        <TopRight/>
+      </el-icon>
             
-      <el-icon :size="20" v-if="windDirection == 'W'"><Right/></el-icon>
-      <el-icon :size="20" v-if="windDirection == 'WNW' || windDirection == 'NW' || windDirection == 'NNW'"><BottomRight/></el-icon>
+      <el-icon :size="20" v-if="windDirection == 'W'">
+        <Right/>
+      </el-icon>
+      <el-icon :size="20" v-if="windDirection == 'WNW' || windDirection == 'NW' || windDirection == 'NNW'">
+        <BottomRight/>
+      </el-icon>
 
      &nbsp;{{weatherInfo.wind_speed}}м/с {{weatherInfo.wind_speed ? ', ' : '' }} {{windDirection}}
     </label>
@@ -84,8 +100,16 @@ import {reactive, inject, computed} from 'vue'
 
         async function getData(){
             loading.value = true;
-            let result =  await getWeather('https://api.openweathermap.org/data/2.5/weather?', '', cityCoords.lat, cityCoords.lon, countryOptions.lang, countryOptions.units, apiKey);
-            //Ниже сообираем объект с нужными данными
+            let result =  await getWeather(
+                'https://api.openweathermap.org/data/2.5/weather?',
+                '',
+                cityCoords.lat,
+                cityCoords.lon,
+                countryOptions.lang,
+                countryOptions.units,
+                apiKey
+            );
+
             weatherInfo.cityName    = `${result.name}, ${result.sys.country}`;
             weatherInfo.temp        = Math.floor(result.main.temp);
             weatherInfo.feels_like  = Math.floor(result.main.feels_like);
@@ -122,7 +146,6 @@ import {reactive, inject, computed} from 'vue'
                 {min:336, max:359, dir:'NNW'},
             ]
             return weatherInfo.wind_deg ? directions.find(el => {if (deg > el.min && deg <= el.max) return true }).dir : '';
-
         })
 
         return {

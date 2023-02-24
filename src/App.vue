@@ -6,12 +6,10 @@
     :element-loading-spinner="svg"
     element-loading-svg-view-box="-10, -10, 50, 50"
   >
-
     <gearCard
         v-if="showGearCard"
         @gearButton="showGearCard = !showGearCard"
     />
-
     <weatherCard
       v-else
       v-for="(city, idx) in myCitiesList"
@@ -19,13 +17,11 @@
       :key="idx"
       @gearButton="showGearCard = !showGearCard"
     />
-
   </div>
 </template>
 
 <script>
 
-//в проекте приянто сокращение  my weather widget - mww
 import {ElNotification}  from 'element-plus';
 import {reactive, ref, provide, watch} from 'vue'
 import weatherCard from "./components/weatherCard.vue"
@@ -46,22 +42,19 @@ export default {
           L 15 15
         " style="stroke-width: 4px; fill: rgba(0, 0, 0, 0)"/>
       `;
-        
         const apiKey         = 'f91bbe3c21ae7202db1054f2f222735a';
         const countryOptions = {
           units : 'metric',
           lang  : 'ru',
         };
-
         const notify         = (title, message, type) => {
           ElNotification({
-            title: title,
-            message: message,
-            type: type,
-            duration: 4000,
+            title    : title,
+            message  : message,
+            type     : type,
+            duration : 4000,
           })
         };
-
         const myStorage      = window.localStorage;
         const myCitiesList   = reactive([]);
         const showGearCard   = ref(false);
@@ -86,11 +79,31 @@ export default {
             });
             currentCity.then(async coords => {
               
-              let result = await getWeather('http://api.openweathermap.org/geo/1.0/reverse?limit=1', '',coords.lat, coords.lon, '', '', apiKey); 
+              let result = await getWeather(
+                  'http://api.openweathermap.org/geo/1.0/reverse?limit=1',
+                  '',
+                  coords.lat,
+                  coords.lon,
+                  '',
+                  '',
+                  apiKey
+              );
               if (Array.isArray(result) && result.length > 0)
-                myCitiesList.push({id : 0, country : result[0].country, name : result[0].name, localName : result[0].local_names.ru, coords});
+                myCitiesList.push({
+                  id        : 0,
+                  country   : result[0].country,
+                  name      : result[0].name,
+                  localName : result[0].local_names.ru,
+                  coords
+                });
               else
-                myCitiesList.push({id  : 0, country : 'нет данных', name : 'нет данных' , localName : 'нет данных', coords});
+                myCitiesList.push({
+                  id        : 0,
+                  country   : 'нет данных',
+                  name      : 'нет данных' ,
+                  localName : 'нет данных',
+                  coords
+                });
             })
           }
           loading.value = false;
@@ -99,9 +112,7 @@ export default {
 
         async function getWeather(url, q, lat, lon, lang, units, apiKey) {
           return await fetch(`${url}&q=${q}&lat=${lat}&lon=${lon}&lang=${lang}&units=${units}&appid=${apiKey}`)
-
           .then(response => response.json())
-
           .catch(error => {return {status : 'error',message : 'Некорректный ответ сервера',system : error.message} });
         };
 
@@ -112,28 +123,26 @@ export default {
         provide('myCitiesList', myCitiesList);
         provide('notify', notify);
 
-        //если в настройках были удалены все города и окно с настройками было закрыто с пустым списком городов, то текущий город все равно будет добавлен
-        watch(showGearCard, () => { if(!showGearCard.value) myCitiesList.length == 0 ? initApp() : ''})
+        watch(showGearCard, () => {
+          if(!showGearCard.value) myCitiesList.length == 0 ? initApp() : ''
+        })
 
-return {loading, svg, myCitiesList, showGearCard}
+        return {loading, svg, myCitiesList, showGearCard}
     },
 }
 </script>
 
 <style>
-/*  Принято сокращение    my weather widget - mww  */
+
 #app {
     font-family: Avenir, Helvetica, Arial, sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     color: #2c3e50;
-    margin-top: 60px;
 }
-
-/* Стили карточки с погодой */
-
 .mww-weatherCard-container{
   padding: 15px;
+  margin-bottom: 5px;
   background: #e9e9e9;
   width: 20%;
 }
@@ -169,8 +178,6 @@ return {loading, svg, myCitiesList, showGearCard}
   font-size: 14px;
   font-weight:600;
 }
-
-/* Стили карточки с настройками */
 .mww-gearCard-container{
   width: 20%;
 }
@@ -211,9 +218,7 @@ return {loading, svg, myCitiesList, showGearCard}
   font-size: 14px;
   font-weight: 600;
 }
-
 .mww-gearCard-newCity-add-button{
   margin-left: 5px;
 }
-
 </style>

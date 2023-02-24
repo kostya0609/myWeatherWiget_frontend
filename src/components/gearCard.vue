@@ -10,12 +10,6 @@
                 <el-icon :size="24"><CloseBold /></el-icon>
             </el-button>
         </div>
-
-<!--        <gearCity-->
-<!--            v-if="myCitiesList.length > 0"-->
-<!--            v-model:myCitiesList="myCitiesList"-->
-<!--            @deleteCity="deleteCity"-->
-<!--        />-->
       <draggable
           v-if="myCitiesList.length > 0"
           :list="myCitiesList"
@@ -25,7 +19,7 @@
           @start="dragging = true"
           @end="dragging = false"
       >
-<!--     :move="checkMove"-->
+
         <template #item="{ element }">
             <gearCity
               :city="element"
@@ -76,22 +70,15 @@ let id = 1;
         emits : ['gearButton'],
         setup(props, context){
             
-            const getWeather     = inject('getWeather');
-            const loading        = inject('loading');
-            const apiKey         = inject('apiKey');
-            const myCitiesList   = inject('myCitiesList');   
-            const notify         = inject('notify');
-
-            const cityName  = ref('');
-            const myStorage = window.localStorage;
-
-            let dragging = ref(false);
-            let dragEnabled = ref(false);
-
-            // полезно при проверке и надо выше вернуть в компонент   :move="checkMove"
-            // function checkMove(e) {
-            //     window.console.log("Future index: " + e.draggedContext.futureIndex);
-            // }
+            const getWeather   = inject('getWeather');
+            const loading      = inject('loading');
+            const apiKey       = inject('apiKey');
+            const myCitiesList = inject('myCitiesList');
+            const notify       = inject('notify');
+            const cityName     = ref('');
+            const myStorage    = window.localStorage;
+            let dragging       = ref(false);
+            let dragEnabled    = ref(false);
 
             function findCity(name){ 
                 return myCitiesList.find(el => name == el.name ? true : false); 
@@ -99,19 +86,31 @@ let id = 1;
 
             async function addCity(){
                 loading.value = true;
-                let result = await getWeather('http://api.openweathermap.org/geo/1.0/direct?limit=1', cityName.value,'', '', '', '', apiKey); 
+                let result = await getWeather(
+                    'http://api.openweathermap.org/geo/1.0/direct?limit=1',
+                    cityName.value,'', '', '', '', apiKey
+                );
                 
                 if (Array.isArray(result) && result.length > 0) {
                     if (!findCity(result[0].name)){
                         let newId = myCitiesList.length;
-                        myCitiesList.push({id : newId, country : result[0].country ? result[0].country : '', name : result[0].name, localName : result[0].local_names ? result[0].local_names.ru : '', coords : {lat : result[0].lat, lon : result[0].lon}})
+                        myCitiesList.push({
+                          id        : newId,
+                          country   : result[0].country ? result[0].country : '',
+                          name      : result[0].name,
+                          localName : result[0].local_names ? result[0].local_names.ru : '',
+                          coords    : {lat : result[0].lat, lon : result[0].lon}})
                         cityName.value = '';
                         updateMyStorage();
                         notify('Добавление города', 'Успешно.', 'success');
                     } else  notify('Ошибка добавления города', 'Указанный город уже есть в списке', 'error');   
                     
                 } else {
-                    notify('Ошибка добавления города', 'Возможно ошибка в названии города, или для указанного города нет информации о погоде', 'error');
+                    notify(
+                        'Ошибка добавления города',
+                        'Возможно ошибка в названии города, или для указанного города нет информации о погоде',
+                        'error'
+                    );
                 }
               
                 loading.value = false;
@@ -136,7 +135,6 @@ let id = 1;
                 context, myCitiesList, loading, cityName,
                 addCity, deleteCity,
                 dragging, dragEnabled,
-                //checkMove
             }
         }
     }
